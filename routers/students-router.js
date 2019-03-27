@@ -8,10 +8,27 @@ const db = knex(knexConfig.development);
 
 const router = express.Router();
 
+router.post("/", (req, res) => {
+  const newStudent = req.body;
+
+  if (newStudent.name && newStudent.cohort_id) {
+    db("students")
+      .insert(newStudent)
+      .then(id => {
+        res.status(201).json(id[0]);
+      })
+      .catch(error => {
+        res.status(500).json(error);
+      });
+  } else {
+    res.status(400).json({ error: "Please provide a name and cohort id for the student." });
+  }
+});
+
 router.get("/", (req, res) => {
-  db("bears")
-    .then(bears => {
-      res.status(200).json(bears);
+  db("students")
+    .then(students => {
+      res.status(200).json(students);
     })
     .catch(error => {
       res.status(500).json(error);
@@ -21,12 +38,12 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   const { id } = req.params;
 
-  db("bears")
+  db("students")
     .where({ id })
     .first() // allows you to get out of array
-    .then(bear => {
-      if (bear) {
-        res.status(200).json(bear);
+    .then(student => {
+      if (student) {
+        res.status(200).json(student);
       } else {
         res.status(404).json({ message: 'Record not found.'})
       }
@@ -36,29 +53,12 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
-  const newBear = req.body;
-
-  if (newBear.name) {
-    db("bears")
-      .insert(newBear)
-      .then(id => {
-        res.status(201).json(id[0]);
-      })
-      .catch(error => {
-        res.status(500).json(error);
-      });
-  } else {
-    res.status(400).json({ error: "Please provide a name for the bear." });
-  }
-});
-
 router.put("/:id", (req, res) => {
   const changes = req.body;
   const { id } = req.params;
 
   if (changes.name) {
-    db('bears')
+    db('students')
     .where({ id })
     .update(changes)
     .then(count => {
@@ -72,14 +72,14 @@ router.put("/:id", (req, res) => {
       res.status(500).json(error);
     })
   } else {
-    res.status(400).json({ error: "Please provide a name for the bear." });
+    res.status(400).json({ error: "Please provide a name for the student." });
   }
 });
 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
 
-  db('bears')
+  db('students')
     .where({ id })
     .del()
     .then(count => {

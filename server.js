@@ -1,7 +1,7 @@
 const express = require("express");
 
 const cohortsRouter = require("./routers/cohorts-router.js");
-const bearsRouter = require("./routers/bears-router.js")
+const studentsRouter = require("./routers/students-router.js")
 
 const helmet = require("helmet");
 
@@ -19,18 +19,18 @@ server.use(function(req, res, next) {
 
 // ENDPOINTS HERE:
 server.get("/", (req, res) => {
-  res.send("WEB DB CHALLENGE II! Try /api/cohorts or /api/bears.");
+  res.send("WEB DB CHALLENGE II! Try /api/cohorts or /api/students.");
 });
 
 server.use("/api/cohorts", cohortsRouter);
-server.use("/api/bears", bearsRouter);
+server.use("/api/students", studentsRouter);
 
 
 // DNE MIDDLEWARE:
 server.use(function(req, res) {
   res
     .status(404)
-    .send("This route does not exist! Try /api/cohorts or /api/bears.");
+    .send("This route does not exist! Try /api/cohorts or /api/students.");
 });
 
 module.exports = server;
