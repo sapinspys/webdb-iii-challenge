@@ -21,7 +21,9 @@ router.post("/", (req, res) => {
         res.status(500).json(error);
       });
   } else {
-    res.status(400).json({ error: "Please provide a name and cohort id for the student." });
+    res
+      .status(400)
+      .json({ error: "Please provide a name and cohort id for the student." });
   }
 });
 
@@ -43,9 +45,23 @@ router.get("/:id", (req, res) => {
     .first() // allows you to get out of array
     .then(student => {
       if (student) {
-        res.status(200).json(student);
+        db("cohorts")
+          .where({ id: student.cohort_id })
+          .first() // allows you to get out of array
+          .then(cohort => {
+            if (cohort) {
+              const cohortName = cohort.name;
+              delete student.cohort_id;
+              res.status(200).json({ ...student, cohort: cohortName });
+            } else {
+              res.status(404).json({ message: "Record not found." });
+            }
+          })
+          .catch(error => {
+            res.status(500).json(error);
+          });
       } else {
-        res.status(404).json({ message: 'Record not found.'})
+        res.status(404).json({ message: "Record not found." });
       }
     })
     .catch(error => {
@@ -58,35 +74,37 @@ router.put("/:id", (req, res) => {
   const { id } = req.params;
 
   if (changes.name && changes.cohort_id) {
-    db('students')
-    .where({ id })
-    .update(changes)
-    .then(count => {
-      if (count) {
-        res.status(200).json(count);
-      } else {
-        res.status(404).json({ message: 'Record not found.'})
-      }
-    })
-    .catch(error => {
-      res.status(500).json(error);
-    })
+    db("students")
+      .where({ id })
+      .update(changes)
+      .then(count => {
+        if (count) {
+          res.status(200).json(count);
+        } else {
+          res.status(404).json({ message: "Record not found." });
+        }
+      })
+      .catch(error => {
+        res.status(500).json(error);
+      });
   } else {
-    res.status(400).json({ error: "Please provide a name and cohort id for the student." });
+    res
+      .status(400)
+      .json({ error: "Please provide a name and cohort id for the student." });
   }
 });
 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
 
-  db('students')
+  db("students")
     .where({ id })
     .del()
     .then(count => {
       if (count) {
         res.status(200).json(count);
       } else {
-        res.status(404).json({ message: 'Record not found.'})
+        res.status(404).json({ message: "Record not found." });
       }
     })
     .catch(err => {
