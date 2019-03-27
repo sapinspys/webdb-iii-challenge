@@ -57,7 +57,7 @@ router.put("/:id", (req, res) => {
   const changes = req.body;
   const { id } = req.params;
 
-  if (changes.name) {
+  if (changes.name && changes.cohort_id) {
     db('students')
     .where({ id })
     .update(changes)
@@ -72,7 +72,7 @@ router.put("/:id", (req, res) => {
       res.status(500).json(error);
     })
   } else {
-    res.status(400).json({ error: "Please provide a name for the student." });
+    res.status(400).json({ error: "Please provide a name and cohort id for the student." });
   }
 });
 
