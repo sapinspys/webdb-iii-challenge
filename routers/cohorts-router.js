@@ -8,6 +8,23 @@ const db = knex(knexConfig.development);
 
 const router = express.Router();
 
+router.post("/", (req, res) => {
+  const newCohort = req.body;
+
+  if (newCohort.name) {
+    db("cohorts")
+      .insert(newCohort)
+      .then(id => {
+        res.status(201).json(id[0]);
+      })
+      .catch(error => {
+        res.status(500).json(error);
+      });
+  } else {
+    res.status(400).json({ error: "Please provide a cohort name." });
+  }
+});
+
 router.get("/", (req, res) => {
   db("cohorts")
     .then(cohorts => {
@@ -36,21 +53,21 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
-  const newCohort = req.body;
+router.get("/:id/students", (req, res) => {
+  const { id } = req.params;
 
-  if (newCohort.name) {
-    db("cohorts")
-      .insert(newCohort)
-      .then(id => {
-        res.status(201).json(id[0]);
-      })
-      .catch(error => {
-        res.status(500).json(error);
-      });
-  } else {
-    res.status(400).json({ error: "Please provide a cohort name." });
-  }
+  db("students")
+    .where({ cohort_id: id })
+    .then(student => {
+      if (student.length) {
+        res.status(200).json(student);
+      } else {
+        res.status(404).json({ message: 'Record not found.'})
+      }
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
 });
 
 router.put("/:id", (req, res) => {
