@@ -42,6 +42,8 @@ Implement the following endpoints:
 - `[PUT] /api/cohorts/:id` This route will update the cohort with the matching `id` using information sent in the body of the request.
 - `[DELETE] /api/cohorts/:id` This route should delete the specified cohort.
 
+Done.
+
 ## Stretch Problem
 
 Add the following endpoints.
