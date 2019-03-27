@@ -14,8 +14,8 @@ Build an API that persists data to SQLite3.
 Use knex migrations to create a database called `lambda.sqlite3` and add the following tables:
 
 ### migration
-  1. knex init
-  2. yarn add sqlite3 knex
+  1. yarn add sqlite3 knex
+  2. knex init 
   3. knex migrate:make add_TABLENAME_table
   4. add useNullAsDefault: true to knexfile.js
 
