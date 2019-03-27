@@ -9,9 +9,9 @@ const db = knex(knexConfig.development);
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  db("zoos")
-    .then(zoos => {
-      res.status(200).json(zoos);
+  db("cohorts")
+    .then(cohorts => {
+      res.status(200).json(cohorts);
     })
     .catch(error => {
       res.status(500).json(error);
@@ -21,12 +21,12 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   const { id } = req.params;
 
-  db("zoos")
+  db("cohorts")
     .where({ id })
     .first() // allows you to get out of array
-    .then(zoo => {
-      if (zoo) {
-        res.status(200).json(zoo);
+    .then(cohort => {
+      if (cohort) {
+        res.status(200).json(cohort);
       } else {
         res.status(404).json({ message: 'Record not found.'})
       }
@@ -37,11 +37,11 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const newZoo = req.body;
+  const newCohort = req.body;
 
-  if (newZoo.name) {
-    db("zoos")
-      .insert(newZoo)
+  if (newCohort.name) {
+    db("cohorts")
+      .insert(newCohort)
       .then(id => {
         res.status(201).json(id[0]);
       })
@@ -49,7 +49,7 @@ router.post("/", (req, res) => {
         res.status(500).json(error);
       });
   } else {
-    res.status(400).json({ error: "Please provide a name for the zoo." });
+    res.status(400).json({ error: "Please provide a cohort name." });
   }
 });
 
@@ -58,7 +58,7 @@ router.put("/:id", (req, res) => {
   const { id } = req.params;
 
   if (changes.name) {
-    db('zoos')
+    db('cohorts')
     .where({ id })
     .update(changes)
     .then(count => {
@@ -72,14 +72,14 @@ router.put("/:id", (req, res) => {
       res.status(500).json(error);
     })
   } else {
-    res.status(400).json({ error: "Please provide a name for the zoo." });
+    res.status(400).json({ error: "Please provide a cohort name." });
   }
 });
 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
 
-  db('zoos')
+  db('cohorts')
     .where({ id })
     .del()
     .then(count => {
