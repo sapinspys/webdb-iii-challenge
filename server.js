@@ -1,6 +1,6 @@
 const express = require("express");
 
-const zoosRouter = require("./routers/zoos-router.js");
+const cohortsRouter = require("./routers/cohorts-router.js");
 const bearsRouter = require("./routers/bears-router.js")
 
 const helmet = require("helmet");
@@ -19,10 +19,10 @@ server.use(function(req, res, next) {
 
 // ENDPOINTS HERE:
 server.get("/", (req, res) => {
-  res.send("WEB DB CHALLENGE II! Try /api/zoos or /api/bears.");
+  res.send("WEB DB CHALLENGE II! Try /api/cohorts or /api/bears.");
 });
 
-server.use("/api/zoos", zoosRouter);
+server.use("/api/cohorts", cohortsRouter);
 server.use("/api/bears", bearsRouter);
 
 
@@ -30,7 +30,7 @@ server.use("/api/bears", bearsRouter);
 server.use(function(req, res) {
   res
     .status(404)
-    .send("This route does not exist! Try /api/zoos or /api/bears.");
+    .send("This route does not exist! Try /api/cohorts or /api/bears.");
 });
 
 module.exports = server;
